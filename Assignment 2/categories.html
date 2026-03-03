@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Categories | NexStore</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <header>
+        <nav class="navbar">
+            <div class="logo">
+                <img src="https://picsum.photos/seed/shop-logo/50/50" alt="NexStore Logo">
+                <span>NexStore</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="shop.html">Shop</a></li>
+                <li><a href="categories.html" class="active">Categories</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+            <div class="cart-icon" onclick="toggleCart()">
+                🛒 <span id="cart-count" class="badge">0</span>
+            </div>
+        </nav>
+    </header>
+
+    <main style="padding: 50px 5%;">
+        <h1 style="text-align: center; margin-bottom: 50px;">Product Categories</h1>
+        
+        <div class="category-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px;">
+            <div class="category-card" style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <img src="https://picsum.photos/200/150?random=audio" alt="Audio" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px; color: #333;">Audio & Sound</h3>
+                <p style="color: #666; margin-bottom: 20px;">Premium headphones, speakers, and audio accessories</p>
+                <button onclick="viewCategory('audio')" style="padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer;">View Products</button>
+            </div>
+
+            <div class="category-card" style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <img src="https://picsum.photos/200/150?random=accessories" alt="Accessories" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px; color: #333;">Tech Accessories</h3>
+                <p style="color: #666; margin-bottom: 20px;">Stands, cases, hubs, and essential tech accessories</p>
+                <button onclick="viewCategory('accessories')" style="padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer;">View Products</button>
+            </div>
+
+            <div class="category-card" style="background: white; padding: 30px; border-radius: 10px; text-align: center; box-shadow: 0 4px 6px rgba(0,0,0,0.1); transition: transform 0.3s;" onmouseover="this.style.transform='translateY(-5px)'" onmouseout="this.style.transform='translateY(0)'">
+                <img src="https://picsum.photos/200/150?random=power" alt="Power" style="width: 100%; border-radius: 8px; margin-bottom: 20px;">
+                <h3 style="margin-bottom: 15px; color: #333;">Power & Charging</h3>
+                <p style="color: #666; margin-bottom: 20px;">Wireless chargers, power banks, and charging solutions</p>
+                <button onclick="viewCategory('power')" style="padding: 10px 20px; background: #1a73e8; color: white; border: none; border-radius: 5px; cursor: pointer;">View Products</button>
+            </div>
+        </div>
+
+        <div id="category-products" style="margin-top: 50px; display: none;">
+            <h2 id="category-title" style="text-align: center; margin-bottom: 30px;"></h2>
+            <button onclick="showAllCategories()" style="margin-bottom: 20px; padding: 8px 16px; background: #666; color: white; border: none; border-radius: 5px; cursor: pointer;">← Back to Categories</button>
+            <div class="product-grid" id="filtered-products"></div>
+        </div>
+    </main>
+
+    <div id="cart-modal" class="cart-modal" style="display: none;">
+        <div class="cart-content">
+            <span class="close" onclick="toggleCart()">&times;</span>
+            <h2>Shopping Cart</h2>
+            <div id="cart-items"></div>
+            <div class="cart-total">
+                <strong>Total: $<span id="cart-total">0.00</span></strong>
+            </div>
+            <button class="checkout-btn" onclick="checkout()">Checkout</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; 2026 NexStore Ecommerce. All rights reserved.</p>
+    </footer>
+
+    <script>
+        let cart = JSON.parse(localStorage.getItem('cart')) || [];
+        updateCartDisplay();
+
+        const products = [
+            { name: 'Wireless Headphones', price: 199.99, category: 'audio', image: 1 },
+            { name: 'Bluetooth Speaker', price: 129.99, category: 'audio', image: 5 },
+            { name: 'Smart Watch Z', price: 249.00, category: 'accessories', image: 2 },
+            { name: 'Pro Laptop Stand', price: 45.00, category: 'accessories', image: 3 },
+            { name: 'Gaming Mouse Pro', price: 89.99, category: 'accessories', image: 4 },
+            { name: 'USB-C Hub 7-in-1', price: 79.99, category: 'accessories', image: 6 },
+            { name: 'Premium Phone Case', price: 24.99, category: 'accessories', image: 8 },
+            { name: 'Adjustable Tablet Stand', price: 34.99, category: 'accessories', image: 9 },
+            { name: 'Wireless Charger Pad', price: 39.99, category: 'power', image: 7 },
+            { name: 'Power Bank 20000mAh', price: 59.99, category: 'power', image: 10 }
+        ];
+
+        function viewCategory(category) {
+            const categoryNames = {
+                audio: 'Audio & Sound',
+                accessories: 'Tech Accessories',
+                power: 'Power & Charging'
+            };
+
+            document.querySelector('.category-grid').style.display = 'none';
+            document.getElementById('category-products').style.display = 'block';
+            document.getElementById('category-title').textContent = categoryNames[category];
+
+            const filteredProducts = products.filter(p => p.category === category);
+            const productsHTML = filteredProducts.map(p => `
+                <div class="product-card">
+                    <img src="https://picsum.photos/200/200?random=${p.image}" alt="${p.name}">
+                    <h3>${p.name}</h3>
+                    <p class="price">$${p.price}</p>
+                    <button class="add-to-cart" onclick="addToCart('${p.name}', ${p.price})">Add to Cart</button>
+                </div>
+            `).join('');
+
+            document.getElementById('filtered-products').innerHTML = productsHTML;
+        }
+
+        function showAllCategories() {
+            document.querySelector('.category-grid').style.display = 'grid';
+            document.getElementById('category-products').style.display = 'none';
+        }
+
+        function addToCart(name, price) {
+            const existing = cart.find(item => item.name === name);
+            if (existing) {
+                existing.quantity += 1;
+            } else {
+                cart.push({ name, price, quantity: 1 });
+            }
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+            showMessage(`${name} added to cart!`);
+        }
+
+        function removeFromCart(name) {
+            cart = cart.filter(item => item.name !== name);
+            localStorage.setItem('cart', JSON.stringify(cart));
+            updateCartDisplay();
+        }
+
+        function updateCartDisplay() {
+            const count = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            
+            document.getElementById('cart-count').textContent = count;
+            document.getElementById('cart-total').textContent = total.toFixed(2);
+            
+            const cartItems = document.getElementById('cart-items');
+            cartItems.innerHTML = cart.map(item => `
+                <div class="cart-item">
+                    <span>${item.name} x${item.quantity}</span>
+                    <span>$${(item.price * item.quantity).toFixed(2)}</span>
+                    <button onclick="removeFromCart('${item.name}')" class="remove-btn">Remove</button>
+                </div>
+            `).join('');
+        }
+
+        function toggleCart() {
+            const modal = document.getElementById('cart-modal');
+            modal.style.display = modal.style.display === 'none' ? 'block' : 'none';
+        }
+
+        function checkout() {
+            if (cart.length === 0) return alert('Cart is empty!');
+            const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+            alert(`Thank you! Total: $${total.toFixed(2)}`);
+            cart = [];
+            localStorage.removeItem('cart');
+            updateCartDisplay();
+            toggleCart();
+        }
+
+        function showMessage(text) {
+            const msg = document.createElement('div');
+            msg.textContent = text;
+            msg.style.cssText = 'position:fixed;top:20px;right:20px;background:#4caf50;color:white;padding:10px 20px;border-radius:5px;z-index:2001';
+            document.body.appendChild(msg);
+            setTimeout(() => msg.remove(), 2000);
+        }
+
+        window.onclick = e => {
+            if (e.target === document.getElementById('cart-modal')) toggleCart();
+        }
+    </script>
+</body>
+</html>
