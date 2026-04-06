@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Assignment 5 - AJAX Live Search</title>
+</head>
+
+<body>
+
+    <h2>eBookShop - AJAX Live Search</h2>
+
+    <label for="searchInput">Search Book by Title or Author:</label><br><br>
+    <input type="text" id="searchInput" placeholder="Type to search..." onkeyup="searchBooks()">
+
+    <div id="resultsBox"></div>
+
+    <script>
+        function searchBooks() {
+            var query = document.getElementById('searchInput').value.trim();
+            var resultsBox = document.getElementById('resultsBox');
+
+            // If search box is empty, show nothing
+            if (query === "") {
+                resultsBox.innerHTML = "";
+                return;
+            }
+
+            // Create AJAX request
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'search_books.php?search=' + encodeURIComponent(query), true);
+
+            xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4 && xhr.status === 200) {
+                    var response = JSON.parse(xhr.responseText);
+
+                    if (response.status === 'success') {
+                        var books = response.data;
+                        var html = "";
+
+                        if (books.length === 0) {
+                            html = "<p>No books found.</p>";
+                        } else {
+                            html = "<table border='1' cellpadding='8' cellspacing='0'>";
+                            html += "<tr><th>ID</th><th>Title</th><th>Author</th><th>Price</th><th>Qty</th></tr>";
+
+                            for (var i = 0; i < books.length; i++) {
+                                html += "<tr>";
+                                html += "<td>" + books[i].book_id + "</td>";
+                                html += "<td>" + books[i].book_title + "</td>";
+                                html += "<td>" + books[i].book_author + "</td>";
+                                html += "<td>" + books[i].book_price + "</td>";
+                                html += "<td>" + books[i].quantity + "</td>";
+                                html += "</tr>";
+                            }
+
+                            html += "</table>";
+                        }
+
+                        resultsBox.innerHTML = html;
+                    }
+                }
+            };
+
+            xhr.send();
+        }
+    </script>
+
+</body>
+
+</html>

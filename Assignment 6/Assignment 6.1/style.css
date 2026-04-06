@@ -1,0 +1,104 @@
+/* Simple and bold styling for the assignment */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 20px;
+}
+
+.container {
+    max-width: 600px;
+    margin: 40px auto;
+    background: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    
+    /* Flexbox for vertical centering of content */
+    min-height: 60vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #333;
+}
+
+.form-container, .output-container {
+    margin-top: 20px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+    display: flex;
+    flex-direction: column;
+}
+
+.input-group label {
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.input-group input, 
+.input-group select, 
+.input-group textarea {
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.input-group textarea {
+    resize: vertical;
+    min-height: 60px;
+}
+
+.button-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.btn {
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.btn:hover {
+    opacity: 0.8;
+}
+
+.btn-add { background-color: #28a745; }
+.btn-update { background-color: #f39c12; }
+.btn-delete { background-color: #dc3545; }
+.btn-view { background-color: #007bff; }
+.btn-clear { background-color: #6c757d; }
+.btn-close { background-color: #343a40; margin-top: 15px; display: block; width: 100%; }
+
+/* Output display styles */
+#employeeDetails {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 4px;
+    line-height: 1.6;
+}
+
+.detail-row {
+    margin-bottom: 5px;
+}
+
+.detail-label {
+    font-weight: bold;
+    color: #444;
+}
